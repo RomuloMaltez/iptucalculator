@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora IPTU</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de IPTU</h1>
+
+    {% if erro %}
+      <div class="erro">{{ erro }}</div>
+    {% endif %}
+
+    {% if resultado %}
+      <div class="resultado">
+        <h2>Resultado do Cálculo</h2>
+        <div class="resultado-container">
+          <div class="resultado-item">
+            <span class="label">VVT:</span>
+            <span class="valor">{{ resultado.VVT }}</span>
+          </div>
+          <div class="resultado-item">
+            <span class="label">VVE:</span>
+            <span class="valor">{{ resultado.VVE }}</span>
+          </div>
+          <div class="resultado-item">
+            <span class="label">VVI:</span>
+            <span class="valor">{{ resultado.VVI }}</span>
+          </div>
+          <div class="resultado-item">
+            <span class="label">Alíquota:</span>
+            <span class="valor">{{ resultado.aliquota }}</span>
+          </div>
+          <div class="resultado-item destaque">
+            <span class="label">IPTU:</span>
+            <span class="valor">{{ resultado.IPTU }}</span>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <form method="POST" action="/calcular">
+      <fieldset>
+        <legend>Imóvel</legend>
+        <label for="imovel_edificado" class="big-label">Imóvel Edificado?</label>
+        <select name="imovel_edificado" id="imovel_edificado">
+          <option value="" selected>Selecione</option>
+          <option value="sim">Sim</option>
+          <option value="nao">Não</option>
+        </select>
+
+        <div id="div_muro_calcada">
+          <label for="muro" class="big-label">Possui Muro?</label>
+          <select name="muro" id="muro">
+            <option value="" selected>Selecione</option>
+            <option value="sim">Sim</option>
+            <option value="nao">Não</option>
+          </select>
+
+          <label for="calcada" class="big-label">Possui Calçada?</label>
+          <select name="calcada" id="calcada">
+            <option value="" selected>Selecione</option>
+            <option value="sim">Sim</option>
+            <option value="nao">Não</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Informações do Terreno</legend>
+        <!-- Campos de texto mantidos iguais -->
+        <label for="area_terreno" class="big-label">Área Total do Terreno (m²):</label>
+        <input type="text" name="area_terreno" id="area_terreno" placeholder="Ex.: 63.230,00">
+
+        <label for="testada" class="big-label">Testada (m):</label>
+        <input type="text" name="testada" id="testada" placeholder="Ex.: 372,87">
+
+        <label for="valor_metro_quadrado" class="big-label">Valor do Metro Quadrado (R$):</label>
+        <input type="text" name="valor_metro_quadrado" id="valor_metro_quadrado" placeholder="Ex.: 14,96">
+
+        <label for="topografia_terreno" class="big-label">Topografia:</label>
+        <select name="topografia_terreno" id="topografia_terreno">
+          <option value="" selected>Selecione</option>
+          <option value="plano">Plano</option>
+          <option value="aclive">Aclive</option>
+          <option value="declive">Declive</option>
+          <option value="irregular">Irregular</option>
+        </select>
+
+        <label for="pedologia_terreno" class="big-label">Pedologia:</label>
+        <select name="pedologia_terreno" id="pedologia_terreno">
+          <option value="" selected>Selecione</option>
+          <option value="seco_normal">Seco / Normal</option>
+          <option value="inundavel">Inundável</option>
+          <option value="alagado">Alagado</option>
+        </select>
+
+        <label for="situacao_terreno" class="big-label">Situação do Terreno:</label>
+        <select name="situacao_terreno" id="situacao_terreno">
+          <option value="" selected>Selecione</option>
+          <option value="meio_quadra_uma_frente">Meio de Quadra (1 frente)</option>
+          <option value="mais_de_uma_frente">Mais de uma frente ou de esquina</option>
+          <option value="encravado">Encravado</option>
+          <option value="situado_em_vila">Situado em Vila</option>
+          <option value="abrange_propria_quadra">Abrange a própria quadra</option>
+        </select>
+      </fieldset>
+
+      <fieldset id="edificacao_fields">
+        <legend>Informações da Edificação</legend>
+        <!-- Campos de texto mantidos iguais -->
+        <label for="area_construida_unidade" class="big-label">Área Construída da Unidade (m²):</label>
+        <input type="text" name="area_construida_unidade" id="area_construida_unidade" placeholder="Ex.: 113,69">
+
+        <label for="area_total_construida" class="big-label">Área Total Construída (m²):</label>
+        <input type="text" name="area_total_construida" id="area_total_construida" placeholder="Ex.: 12.559,54">
+
+        <label for="tipo_construcao" class="big-label">Tipo de Construção:</label>
+        <select name="tipo_construcao" id="tipo_construcao">
+          <option value="" selected>Selecione</option>
+          <option value="casa">Casa</option>
+          <option value="apartamento">Apartamento</option>
+          <option value="loja">Loja</option>
+          <option value="sala_comercial">Sala Comercial</option>
+          <option value="barraco_favela">Barraco/Favela</option>
+          <option value="galpao">Galpão</option>
+          <option value="industria">Indústria</option>
+          <option value="telheiro">Telheiro</option>
+          <option value="posto_gasolina">Posto de Gasolina</option>
+          <option value="arquitetura_especial">Arquitetura Especial</option>
+        </select>
+
+        <label for="situacao_edificacao" class="big-label">Fator de Situação (Fs):</label>
+        <select name="situacao_edificacao" id="situacao_edificacao">
+          <option value="" selected>Selecione</option>
+          <option value="isolada">Isolada</option>
+          <option value="conjugada">Conjugada</option>
+          <option value="geminada">Geminada</option>
+        </select>
+
+        <label for="posicao_terreno" class="big-label">Fator de Posição (Fp):</label>
+        <select name="posicao_terreno" id="posicao_terreno">
+          <option value="" selected>Selecione</option>
+          <option value="frente">Frente</option>
+          <option value="fundos">Fundos</option>
+          <option value="superposta_frente">Superposta Frente</option>
+          <option value="superposta_fundo">Superposta Fundo</option>
+          <option value="galeria">Galeria</option>
+        </select>
+
+        <label for="alinhamento" class="big-label">Fator de Alinhamento (Fa):</label>
+        <select name="alinhamento" id="alinhamento">
+          <option value="" selected>Selecione</option>
+          <option value="alinhada">Alinhada</option>
+          <option value="recuada">Recuada</option>
+        </select>
+
+        <label for="estrutura" class="big-label">Estrutura (Cest):</label>
+        <select name="estrutura" id="estrutura">
+          <option value="" selected>Selecione</option>
+          <option value="alvenaria">Alvenaria</option>
+          <option value="concreto">Concreto</option>
+          <option value="madeira">Madeira</option>
+          <option value="metalica">Metálica</option>
+          <option value="taipa">Taipa</option>
+        </select>
+
+        <label for="cobertura" class="big-label">Cobertura (Ccob):</label>
+        <select name="cobertura" id="cobertura">
+          <option value="" selected>Selecione</option>
+          <option value="telha_fibro_cimento">Telha Fibro-cimento</option>
+          <option value="telha_barro">Telha Barro</option>
+          <option value="laje">Laje</option>
+          <option value="palha">Palha</option>
+          <option value="aluminio">Alumínio</option>
+          <option value="plastico_sintetico">Plástico Sintético</option>
+          <option value="madeira_cavaco">Madeira/Cavaco</option>
+          <option value="especial">Especial</option>
+        </select>
+
+        <label for="piso" class="big-label">Piso (Cpis):</label>
+        <select name="piso" id="piso">
+          <option value="" selected>Selecione</option>
+          <option value="precario_cimentado">Precário, Cimentado</option>
+          <option value="ardosia_taco_carpete">Ardósia, Taco/Carpete</option>
+          <option value="ceramica_carpete_especial">Cerâmica, Carpete Especial</option>
+          <option value="tabua_corrida_borracha">Tábua Corrida, Borracha</option>
+          <option value="marmore_granito">Mármore, Granito</option>
+        </select>
+
+        <label for="revestimento_externo" class="big-label">Revestimento Externo (Crex):</label>
+        <select name="revestimento_externo" id="revestimento_externo">
+          <option value="" selected>Selecione</option>
+          <option value="precario_ausente">Precário/Ausente</option>
+          <option value="pintura_oleo_madeira">Pintura/Óleo/Madeira</option>
+          <option value="tijolo_vista">Tijolo à Vista</option>
+          <option value="ceramica_pedra_concreto">Cerâmica, Pedra, Concreto</option>
+          <option value="marmore_granito">Mármore, Granito</option>
+        </select>
+
+        <label for="revestimento_interno" class="big-label">Revestimento Interno (Crin):</label>
+        <select name="revestimento_interno" id="revestimento_interno">
+          <option value="" selected>Selecione</option>
+          <option value="ausente_precario">Ausente/Precário</option>
+          <option value="pintura_papel_oleo">Pintura, Papel, Óleo</option>
+          <option value="ceramica_pedra_concreto">Cerâmica, Pedra, Concreto</option>
+          <option value="espelho_marmore_granito">Espelho, Mármore, Granito</option>
+        </select>
+
+        <label for="forro" class="big-label">Forro (Cfor):</label>
+        <select name="forro" id="forro">
+          <option value="" selected>Selecione</option>
+          <option value="ausente_precario">Ausente/Precário</option>
+          <option value="plastico_gesso_formica">Plástico, Gesso, Fórmica</option>
+          <option value="metalica_madeira_aluminio">Metálica, Madeira, Alumínio</option>
+          <option value="laje">Laje</option>
+        </select>
+
+        <label for="conservacao" class="big-label">Fator de Conservação (Fc):</label>
+        <select name="conservacao" id="conservacao">
+          <option value="" selected>Selecione</option>
+          <option value="bom">Bom</option>
+          <option value="regular">Regular</option>
+          <option value="ruim">Ruim</option>
+        </select>
+      </fieldset>
+
+      <button type="submit">CALCULAR IPTU</button>
+    </form>
+  </div>
+
+  <!-- Script JavaScript mantido igual -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const imovelEdificado = document.getElementById('imovel_edificado');
+      const divMuroCalcada = document.getElementById('div_muro_calcada');
+      const edificacaoFields = document.getElementById('edificacao_fields');
+
+      function toggleFields() {
+        if (imovelEdificado.value === 'sim') {
+          divMuroCalcada.style.display = 'none';
+          edificacaoFields.style.display = 'block';
+        } else {
+          divMuroCalcada.style.display = 'block';
+          edificacaoFields.style.display = 'none';
+        }
+      }
+
+      imovelEdificado.addEventListener('change', toggleFields);
+      toggleFields();
+    });
+  </script>
+</body>
+</html>

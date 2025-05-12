@@ -1,0 +1,188 @@
+/* Importar fonte moderna */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  color: #333;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 700;
+  color: #3F51B5;
+  font-size: 2rem;
+}
+
+legend {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #3F51B5;
+}
+
+.big-label {
+  font-size: 1.3rem;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+  font-size: 1.2rem;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: #3F51B5;
+  outline: none;
+}
+
+/* Correção para evitar que os selects estourem o layout */
+select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ajustando os selects que estavam grandes demais */
+#edificacao_fields select {
+  max-width: 100%;
+}
+
+/* Melhorando espaçamento e alinhamento */
+fieldset {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: #3F51B5;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #303F9F;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  input[type="text"],
+  select {
+    padding: 10px;
+    font-size: 1.1rem;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 1.1rem;
+  }
+}
+
+/* Estilos para o resultado */
+.resultado {
+  margin-top: 20px;
+}
+
+.resultado h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #3F51B5;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.resultado-container {
+  background-color: #e8eaf6; /* Azul claro, combinando com o tema */
+  border-radius: 6px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #c5cae9;
+}
+
+.resultado-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #d1d9ff; /* Linha divisória suave */
+}
+
+.resultado-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: 500;
+  color: #3F51B5; /* Mesma cor do título e botão */
+}
+
+.valor {
+  color: #333;
+  font-weight: 400;
+}
+
+/* Destaque para o IPTU */
+.resultado-item.destaque {
+  background-color: #c5cae9; /* Azul um pouco mais escuro */
+  padding: 12px 10px;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.resultado-item.destaque .label {
+  color: #303F9F; /* Tom mais escuro para contraste */
+}
+
+.resultado-item.destaque .valor {
+  font-weight: 700; /* Negrito para destacar o valor do IPTU */
+  font-size: 1.3rem;
+}
+
+/* Transição suave para o resultado aparecer */
+.resultado-container {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
