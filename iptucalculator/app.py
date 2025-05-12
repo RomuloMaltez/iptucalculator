@@ -484,3 +484,8 @@ def calcular():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+else:
+    # Para o Vercel
+    # O aplicativo será servido pelo Vercel, não precisamos chamar app.run()
+    # Apenas garantimos que 'app' está disponível para importação
+    pass
