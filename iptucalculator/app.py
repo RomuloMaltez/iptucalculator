@@ -6,10 +6,21 @@ app = Flask(__name__)
 # -----------------------------------------------------------
 # Configurações de locale (para formatação PT-BR, se desejado)
 # -----------------------------------------------------------
+# Código mais seguro para o Vercel - evita erros de locale
 try:
+    # Tenta configurar para pt_BR primeiro
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-except locale.Error:
-    locale.setlocale(locale.LC_ALL, '')
+except:
+    try:
+        # Tenta pt-BR (formato alternativo)
+        locale.setlocale(locale.LC_ALL, 'pt-BR')
+    except:
+        try:
+            # Tenta Portuguese_Brazil
+            locale.setlocale(locale.LC_ALL, 'Portuguese_Brazil')
+        except:
+            # Se não funcionar, usa o padrão
+            locale.setlocale(locale.LC_ALL, '')
 
 # -----------------------------------------------------------
 # Funções de Conversão e Formatação
@@ -27,11 +38,20 @@ def convert_brazilian_to_float(value_str):
 def format_currency(value):
     """
     Formata número no padrão monetário brasileiro (R$ 1.234,56).
+    Versão mais robusta que não depende do locale.
     """
     try:
         return locale.currency(value, grouping=True)
     except:
-        return f"R$ {value:,.2f}"
+        # Formatação manual para garantir funcionamento
+        value_str = f"{value:,.2f}"
+        # Substituir vírgula por X temporariamente
+        value_str = value_str.replace(',', 'X')
+        # Substituir ponto por vírgula
+        value_str = value_str.replace('.', ',')
+        # Substituir X por ponto
+        value_str = value_str.replace('X', '.')
+        return f"R$ {value_str}"
 
 # -----------------------------------------------------------
 # Dicionários e Constantes para o Cálculo do VVT
